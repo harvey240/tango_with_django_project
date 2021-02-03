@@ -77,7 +77,7 @@ def add_category(request):
             form.save(commit=True)
             #now cat is saved we could confirm this
             #for now just redirect user back to index
-            return redirect('/rango/')
+            return redirect(reverse('rango:index'))
         else:
             #supplied form had errors so print to terminal
             print(form.errors)
@@ -93,7 +93,7 @@ def add_page(request, category_name_slug):
         category = None
     
     if category is None:
-        return redirect('/rango/')
+        return redirect(reverse('rango:index'))
     
     form = PageForm()
     
