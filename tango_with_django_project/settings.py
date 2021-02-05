@@ -105,6 +105,9 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
+#Session Stuff
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+
 #Login Stuff
 LOGIN_URL = 'rango:login'
 

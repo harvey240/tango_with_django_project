@@ -15,12 +15,12 @@ def get_server_side_cookie(request, cookie, default_val=None):
     return val
 
 #HELPER FUNCTION, for handling cookies
-def visitor_cookie_handler(request, response):
+def visitor_cookie_handler(request):
     #get number of site visits, use COOKIES.get() to obtain visits cookie.
     #if cookie exists, return value as int, if not value 1 is used
-    visits = int(request.COOKIES.get('visits','1'))
+    visits = int(get_server_side_cookie(request, 'visits', '1'))
     
-    last_visit_cookie = request.COOKIES.get('last_visit', str(datetime.now()))
+    last_visit_cookie = get_server_side_cookie(request, 'last_visit', str(datetime.now()))
     last_visit_time = datetime.strptime(last_visit_cookie[:-7],
                                         '%Y-%m-%d %H:%M:%S')
     
@@ -51,14 +51,12 @@ def index(request):
     context_dict['boldmessage'] = 'Crunchy, creamy, cookie, candy, cupcake!'
     context_dict['categories'] = category_list
     context_dict['pages'] = page_list
-    context_dict['visits'] = int(request.COOKIES.get('visits','1'))
     
-    #obtain response object early on so we can add cookie info.
+    #call the helper function to handle cookies, set context_dict value of visits
+    visitor_cookie_handler(request)
+    context_dict['visits'] = request.session['visits']
+
     response = render(request, 'rango/index.html', context=context_dict)
-    
-    #call the helper function to handle cookies
-    visitor_cookie_handler(request, response)
-    
     # Return response back to user, updating any cookies that need changed
     return response
 
